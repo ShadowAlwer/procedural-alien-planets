@@ -10,9 +10,15 @@ public class Planet : MonoBehaviour
 
     public Color planetColor;
 
+    public int planetRadius;
+
+    public NoiseSettings settings= new NoiseSettings();
+
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
+    
+
 
     private void OnValidate()
     {
@@ -43,7 +49,7 @@ public class Planet : MonoBehaviour
                 meshFilters[i].sharedMesh = new Mesh();
             }
 
-            terrainFaces[i] = new TerrainFace(meshFilters[i].sharedMesh, resolution, directions[i]);
+            terrainFaces[i] = new TerrainFace(meshFilters[i].sharedMesh, resolution, directions[i], settings);
         }
     }
 
@@ -51,7 +57,7 @@ public class Planet : MonoBehaviour
     {
         foreach (TerrainFace face in terrainFaces)
         {
-            face.ConstructMesh();
+            face.ConstructMesh(planetRadius);
         }
     }
 
