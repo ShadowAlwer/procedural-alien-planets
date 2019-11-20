@@ -8,11 +8,12 @@ public class Planet : MonoBehaviour
     [Range(2, 256)]
     public int resolution = 10;
 
-    public Color planetColor;
+    public ColorSettings colorSettings;
+    public ShapeSettings shapeSettings;
+
+    public ShapeGenerator shape;
 
     public int planetRadius;
-
-    public NoiseSettings settings= new NoiseSettings();
 
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
@@ -20,7 +21,7 @@ public class Planet : MonoBehaviour
     
 
 
-    private void OnValidate()
+    public void Generate()
     {
         Initialize();
         GenerateMesh();
@@ -29,6 +30,8 @@ public class Planet : MonoBehaviour
 
     void Initialize()
     {
+        shape =new ShapeGenerator(shapeSettings);
+
         if (meshFilters == null || meshFilters.Length == 0)
         {
             meshFilters = new MeshFilter[6];
@@ -49,7 +52,7 @@ public class Planet : MonoBehaviour
                 meshFilters[i].sharedMesh = new Mesh();
             }
 
-            terrainFaces[i] = new TerrainFace(meshFilters[i].sharedMesh, resolution, directions[i], settings);
+            terrainFaces[i] = new TerrainFace(shape, meshFilters[i].sharedMesh, resolution, directions[i]);
         }
     }
 
@@ -57,14 +60,14 @@ public class Planet : MonoBehaviour
     {
         foreach (TerrainFace face in terrainFaces)
         {
-            face.ConstructMesh(planetRadius);
+            face.ConstructMesh();
         }
     }
 
     void ColorPlanet()
     {
         foreach(MeshFilter filter in meshFilters){
-            filter.GetComponent<MeshRenderer>().sharedMaterial.color = planetColor;
+            filter.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
 
         }
 

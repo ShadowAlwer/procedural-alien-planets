@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class PerlinNoise3D
 {
-
     static float xof = Random.value;
     static float yof = Random.value;
-    static public float getPerlinNoise3D(Vector3 pointOnPlanet, int freq){
+    static public float getPerlinNoise3D(Vector3 pointOnPlanet, float freq){
 
         pointOnPlanet.x += xof;
         pointOnPlanet.y += yof;
 
-        float XY = _perlin3DFixed(pointOnPlanet.x,pointOnPlanet.y);
-        float XZ = _perlin3DFixed(pointOnPlanet.x,pointOnPlanet.z);
-        float YZ = _perlin3DFixed(pointOnPlanet.y,pointOnPlanet.z);
+        float XY = _perlin3DFixed(pointOnPlanet.x,pointOnPlanet.y, freq);
+        float XZ = _perlin3DFixed(pointOnPlanet.x,pointOnPlanet.z, freq);
+        float YZ = _perlin3DFixed(pointOnPlanet.y,pointOnPlanet.z, freq);
 
-        float YX = _perlin3DFixed(pointOnPlanet.y,pointOnPlanet.x);
-        float ZX = _perlin3DFixed(pointOnPlanet.z,pointOnPlanet.x);
-        float ZY = _perlin3DFixed(pointOnPlanet.z,pointOnPlanet.y);
+        float YX = _perlin3DFixed(pointOnPlanet.y,pointOnPlanet.x, freq);
+        float ZX = _perlin3DFixed(pointOnPlanet.z,pointOnPlanet.x, freq);
+        float ZY = _perlin3DFixed(pointOnPlanet.z,pointOnPlanet.y, freq);
 
         float noise = (XY * XZ * YX * YZ * ZX * ZY);
         return noise;
@@ -26,8 +25,8 @@ public class PerlinNoise3D
 
     }
 
-    static float _perlin3DFixed(float a, float b)
+    static float _perlin3DFixed(float a, float b,float freq)
     {
-        return Mathf.Sin(Mathf.PI * Mathf.PerlinNoise(a, b));
+        return Mathf.Sin(freq*Mathf.PI * Mathf.PerlinNoise(a, b));
     }
 }

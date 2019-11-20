@@ -13,10 +13,12 @@ public class NoiseSettings
     public float baseRoughness = 1;
 
     public float presistence = 0.5f;
-    [Range(1, 8)]
+
     public int layers = 1;
     public Vector3 center=Vector3.zero;
 
     [Range(0, 10)]
-    public int seaLevel = 1;
+    public float seaLevel = 1;
+
+    public float freq = 1;
 }
