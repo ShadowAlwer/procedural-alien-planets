@@ -13,8 +13,6 @@ public class Planet : MonoBehaviour
 
     public ShapeGenerator shape;
 
-    public int planetRadius;
-
     [SerializeField, HideInInspector]
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;

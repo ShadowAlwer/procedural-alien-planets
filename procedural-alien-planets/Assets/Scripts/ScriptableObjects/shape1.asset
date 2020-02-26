@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: shape1
   m_EditorClassIdentifier: 
   noise:
-    power: 0.2
-    roughness: 1.72
-    baseRoughness: 0.38
-    presistence: 0.63
+    power: 0.848
+    roughness: 2.18
+    baseRoughness: 0.05
+    presistence: 0.65
     layers: 10
-    center: {x: 99.16, y: 133.6, z: 31.2}
-    seaLevel: 1.9
-    freq: 0.88
+    center: {x: 38.9, y: 25.05, z: 4.09}
+    seaLevel: 1.74
+    freq: 7.72
   planetRadius: 100

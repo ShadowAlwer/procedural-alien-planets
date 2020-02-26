@@ -26,7 +26,7 @@ public class ShapeGenerator
 
         for (int i = 0; i < settings.noise.layers; i++)
         {
-            noise += (PerlinNoise3D.getPerlinNoise3D(v * freq + settings.noise.center, settings.noise.freq) + 1) * .5f * amplitude;
+            noise += (PerlinNoise3D.getPerlinNoise3D(v * freq + settings.noise.center, settings.noise.freq) + 1) * .6f * amplitude;
             amplitude *= settings.noise.presistence;
             freq *= settings.noise.roughness;
         }
@@ -35,5 +35,4 @@ public class ShapeGenerator
         v = v * settings.planetRadius * (noise + 1);
         return v;
     }
-
 }
