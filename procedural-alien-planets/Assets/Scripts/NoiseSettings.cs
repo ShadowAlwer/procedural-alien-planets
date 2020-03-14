@@ -17,8 +17,14 @@ public class NoiseSettings
     public int layers = 1;
     public Vector3 center=Vector3.zero;
 
-    [Range(1, 3)]
+    [Range(0, 10)]
     public float seaLevel = 1;
 
     public float freq = 1;
+
+    public int seed = 12;
+
+    public float jitterWorley=1;
+
+    public NoiseType type = NoiseType.PERLIN;
 }

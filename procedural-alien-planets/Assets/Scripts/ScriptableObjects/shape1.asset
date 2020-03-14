@@ -13,12 +13,15 @@ MonoBehaviour:
   m_Name: shape1
   m_EditorClassIdentifier: 
   noise:
-    power: 0.848
-    roughness: 2.18
-    baseRoughness: 0.05
-    presistence: 0.65
+    power: 0.172
+    roughness: 1.26
+    baseRoughness: 1.18
+    presistence: 0.9
     layers: 10
     center: {x: 38.9, y: 25.05, z: 4.09}
-    seaLevel: 1.74
-    freq: 7.72
+    seaLevel: 4.2
+    freq: 1.66
+    seed: 75
+    jitterWorley: 1
+    type: 2
   planetRadius: 100

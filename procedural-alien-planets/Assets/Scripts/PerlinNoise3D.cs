@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PerlinNoise3D
 {
-    static float xof = Random.value;
-    static float yof = Random.value;
-    static public float getPerlinNoise3D(Vector3 pointOnPlanet, float freq){
+     static float xof = Random.value;
+     static float yof = Random.value;
+
+     
+        public static float Sample3D_OLD(Vector3 pointOnPlanet, float freq){
 
         pointOnPlanet.x += xof;
         pointOnPlanet.y += yof;
@@ -25,8 +28,12 @@ public class PerlinNoise3D
 
     }
 
+
     static float _perlin3DFixed(float a, float b,float freq)
     {
         return Mathf.Sin(freq*Mathf.PI * Mathf.PerlinNoise(a, b));
     }
+
+    
 }
+

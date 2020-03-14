@@ -1,6 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using  static NoiseType;
+
+using ProceduralNoiseProject;
+using System;
 
 public class ShapeGenerator 
 {
@@ -11,14 +15,10 @@ public class ShapeGenerator
     }
     
 
-    public Vector3 getPointElevation(Vector3 pointOnUnitSphere) {
-
-       return  applyPerlinNoise(pointOnUnitSphere);
-    }
-
-
-    public Vector3 applyPerlinNoise(Vector3 pointOnUnitSphere)
+    public Vector3 getPointElevation(Vector3 pointOnUnitSphere)
     {
+        Noise noiseGen = getNoiseGen();
+
         Vector3 v = pointOnUnitSphere;
         float freq = settings.noise.baseRoughness;
         float amplitude = 1;
@@ -26,13 +26,39 @@ public class ShapeGenerator
 
         for (int i = 0; i < settings.noise.layers; i++)
         {
-            noise += (PerlinNoise3D.getPerlinNoise3D(v * freq + settings.noise.center, settings.noise.freq) + 1) * .6f * amplitude;
+            //noise += (PerlinNoise.Sample3D_OLD(v * freq + settings.noise.center, settings.noise.freq) + 1) * .6f * amplitude;
+            Vector3 point=v*freq + settings.noise.center;
+            noise += (noiseGen.Sample3D(point.x,point.y,point.z)+1)* .6f * amplitude;
             amplitude *= settings.noise.presistence;
             freq *= settings.noise.roughness;
         }
-        noise = Mathf.Max(0, noise - settings.noise.seaLevel);
+
+        
+        if(noise<settings.noise.seaLevel){
+            noise =settings.noise.seaLevel;
+        }
+        else{
+           
+        }
+        //noise = Mathf.Max(0, noise - settings.noise.seaLevel);
         noise = noise * settings.noise.power;
+
         v = v * settings.planetRadius * (noise + 1);
         return v;
+    }
+
+    private Noise getNoiseGen()
+    {
+        switch(settings.noise.type){
+            case NoiseType.PERLIN:
+                return new PerlinNoise(settings.noise.seed,settings.noise.freq);
+            case NoiseType.WORLEY:
+                return new WorleyNoise(settings.noise.seed, settings.noise.freq, settings.noise.jitterWorley);
+
+            case NoiseType.SIMPLEX:
+                return new SimplexNoise( settings.noise.seed,settings.noise.freq);
+            default:
+                return new SimplexNoise(settings.noise.seed,settings.noise.freq);
+        }
     }
 }
