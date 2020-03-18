@@ -10,8 +10,17 @@ public class ShapeGenerator
 {
     public ShapeSettings settings;
 
+    public PerlinNoise perlin;
+
+    public WorleyNoise worley;
+
+    public SimplexNoise simplex;
+
     public ShapeGenerator(ShapeSettings settings) {
         this.settings = settings;
+        perlin = new PerlinNoise(settings.noise.seed,settings.noise.freq);
+        worley = new WorleyNoise(settings.noise.seed, settings.noise.freq, settings.noise.jitterWorley);
+        simplex = new SimplexNoise( settings.noise.seed,settings.noise.freq);
     }
     
 
@@ -51,14 +60,13 @@ public class ShapeGenerator
     {
         switch(settings.noise.type){
             case NoiseType.PERLIN:
-                return new PerlinNoise(settings.noise.seed,settings.noise.freq);
+                return perlin;
             case NoiseType.WORLEY:
-                return new WorleyNoise(settings.noise.seed, settings.noise.freq, settings.noise.jitterWorley);
-
+                return worley;
             case NoiseType.SIMPLEX:
-                return new SimplexNoise( settings.noise.seed,settings.noise.freq);
+                return simplex;
             default:
-                return new SimplexNoise(settings.noise.seed,settings.noise.freq);
+                return simplex;
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Planet : MonoBehaviour
 {
 
-    [Range(2, 256)]
+    [Range(2, 512)]
     public int resolution = 10;
 
     public ColorSettings colorSettings;
@@ -14,7 +14,7 @@ public class Planet : MonoBehaviour
     public ShapeGenerator shape;
 
     [SerializeField, HideInInspector]
-    MeshFilter[] meshFilters;
+    MeshFilter[][] meshFilters;
     TerrainFace[] terrainFaces;
     
 
@@ -32,7 +32,10 @@ public class Planet : MonoBehaviour
 
         if (meshFilters == null || meshFilters.Length == 0)
         {
-            meshFilters = new MeshFilter[6];
+            meshFilters = new MeshFilter[6][];
+            for(int i=0; i<meshFilters.Length; i++){
+                meshFilters[i] = new MeshFilter[4];
+            }
         }
         terrainFaces = new TerrainFace[6];
 
@@ -40,17 +43,19 @@ public class Planet : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            if (meshFilters[i] == null)
-            {
-                GameObject meshObj = new GameObject("mesh");
-                meshObj.transform.parent = transform;
+            for(int j=0; j<4; j++){
+                if (meshFilters[i][j] == null)
+                {
+                    GameObject meshObj = new GameObject("mesh");
+                    meshObj.transform.parent = transform;
 
-                meshObj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
-                meshFilters[i] = meshObj.AddComponent<MeshFilter>();
-                meshFilters[i].sharedMesh = new Mesh();
+                    meshObj.AddComponent<MeshRenderer>().sharedMaterial = new Material(Shader.Find("Standard"));
+                    meshFilters[i][j] = meshObj.AddComponent<MeshFilter>();
+                    meshFilters[i][j].sharedMesh = new Mesh();
+                }
             }
 
-            terrainFaces[i] = new TerrainFace(shape, meshFilters[i].sharedMesh, resolution, directions[i]);
+            terrainFaces[i] = new TerrainFace(shape, meshFilters[i], resolution, directions[i]);
         }
     }
 
@@ -64,8 +69,9 @@ public class Planet : MonoBehaviour
 
     void ColorPlanet()
     {
-        foreach(MeshFilter filter in meshFilters){
-            filter.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
+        foreach(MeshFilter[] filters in meshFilters){
+            foreach(MeshFilter filter in filters)
+                filter.GetComponent<MeshRenderer>().sharedMaterial.color = colorSettings.planetColor;
 
         }
 
