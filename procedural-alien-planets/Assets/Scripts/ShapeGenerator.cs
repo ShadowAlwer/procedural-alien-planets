@@ -16,7 +16,10 @@ public class ShapeGenerator
 
     public SimplexNoise simplex;
 
+    public MinMax minmax;
+
     public ShapeGenerator(ShapeSettings settings) {
+        this.minmax = new MinMax();
         this.settings = settings;
         perlin = new PerlinNoise(settings.noise.seed,settings.noise.freq);
         worley = new WorleyNoise(settings.noise.seed, settings.noise.freq, settings.noise.jitterWorley);
@@ -44,7 +47,8 @@ public class ShapeGenerator
 
         
         if(noise<settings.noise.seaLevel){
-            noise =settings.noise.seaLevel;
+            noise = settings.noise.seaLevel;
+            //noise = 0; intresting results/ canions
         }
         else{
            
@@ -52,7 +56,8 @@ public class ShapeGenerator
         //noise = Mathf.Max(0, noise - settings.noise.seaLevel);
         noise = noise * settings.noise.power;
 
-        v = v * settings.planetRadius * (noise + 1);
+        v = v * (noise+1);
+        minmax.Update(v.magnitude);
         return v;
     }
 
