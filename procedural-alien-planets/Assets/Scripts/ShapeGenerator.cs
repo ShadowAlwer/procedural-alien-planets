@@ -33,7 +33,7 @@ public class ShapeGenerator
 
         Vector3 v = pointOnUnitSphere;
         float freq = settings.noise.baseRoughness;
-        float amplitude = 1;
+        float amplitude = settings.noise.amplitude;
         float noise = 0;
 
         for (int i = 0; i < settings.noise.layers; i++)
@@ -45,18 +45,16 @@ public class ShapeGenerator
             freq *= settings.noise.roughness;
         }
 
-        
         if(noise<settings.noise.seaLevel){
             noise = settings.noise.seaLevel;
-            //noise = 0; intresting results/ canions
+            //noise = 0; //intresting results/ canions
         }
         else{
            
         }
         //noise = Mathf.Max(0, noise - settings.noise.seaLevel);
         noise = noise * settings.noise.power;
-
-        v = v * (noise+1);
+        v = v * (noise + 1);
         minmax.Update(v.magnitude);
         return v;
     }

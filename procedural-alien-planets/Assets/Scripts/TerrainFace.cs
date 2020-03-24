@@ -57,8 +57,8 @@ public class TerrainFace {
                     Vector2 percent = new Vector2(x, y) / (resolution - 1);
                     Vector3 pointOnUnitCube = localUp + (percent.x-.5f)*2* axisA + (percent.y-.5f)*2* axisB;
                     Vector3 pointOnCube = (localUp*0.5f+ (percent.x-.5f)*2* axisA + (percent.y-.5f)*2* axisB)*(resolution-1)+localUp*(resolution-1)*0.5f;
-                    Vector3 pointOnUnitSphere = pointOnUnitCube *(shape.settings.planetRadius/pointOnUnitCube.magnitude);
-                    //Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
+                    //Vector3 pointOnUnitSphere = pointOnUnitCube *(shape.settings.planetRadius/pointOnUnitCube.magnitude);
+                    Vector3 pointOnUnitSphere = pointOnUnitCube.normalized;
                     vertices[k][i] =shape.getPointElevation(pointOnUnitSphere);
                     //vertices[k][i]=pointOnUnitSphere;
                     if (ox != resolution/2 && oy != resolution/2)

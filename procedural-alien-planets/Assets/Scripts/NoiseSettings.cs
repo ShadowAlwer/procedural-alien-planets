@@ -7,6 +7,8 @@ public class NoiseSettings
 {
     [Range(0,1)]
     public float power=1;
+
+    public float amplitude=1;
     [Range(0, 3)]
     public float roughness = 2;
 

@@ -18,6 +18,10 @@ public class PlanetEditor : Editor
         if (GUILayout.Button("Generate Planet")) {
             planet.Generate();
         }
+
+        if(GUILayout.Button("ColorPlanet")){
+            planet.ColorPlanet();
+        }
     }
 
      void DrawSettingEditor(UnityEngine.Object settings)
