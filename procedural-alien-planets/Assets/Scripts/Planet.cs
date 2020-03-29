@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Planet : MonoBehaviour
 {
 
-    [Range(3, 509)]
     public int resolution = 10;
 
     public ColorSettings colorSettings;
@@ -22,6 +22,7 @@ public class Planet : MonoBehaviour
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
+    const int MAX_RES= 250;
     
     void Start(){
         ColorPlanet();
@@ -35,23 +36,21 @@ public class Planet : MonoBehaviour
 
     void Initialize()
     {
-        this.resolution = resolution%2 == 0 ? resolution-1 : resolution;
+
+        int n = CalculateN();
+        int n2=n*n;
+        Debug.Log("n "+ n+ ", n2 "+n2);
         shape = new ShapeGenerator(shapeSettings);
         color = new ColorGenerator(colorSettings);
+        
 
-        /*
-        if (meshFilters == null || meshFilters.Length == 0)
+        if (meshFilters == null || meshFilters.Length == 0 || meshFilters.Length != n2*6)
         {
-            meshFilters = new MeshFilter[6][];
             for(int i=0; i<meshFilters.Length; i++){
-                meshFilters[i] = new MeshFilter[4];
+                Destroy(meshFilters[i]);
             }
-        }
-        */
-
-        if (meshFilters == null || meshFilters.Length == 0)
-        {
-            meshFilters = new MeshFilter[24];
+            meshFilters=null;
+            meshFilters = new MeshFilter[n2*6];
         }
 
         if(terrainFaces == null)
@@ -61,33 +60,42 @@ public class Planet : MonoBehaviour
 
         MeshFilter[][] tmp=new MeshFilter[6][];
         for(int i=0; i<tmp.Length; i++){
-                tmp[i] = new MeshFilter[4];
+                tmp[i] = new MeshFilter[n2];
             }
         for (int i = 0; i < 6; i++)
         {
-            for(int j=0; j<4; j++){
-                if (meshFilters[i*4+j] == null)
-                {
+            for(int j=0; j<n2; j++){
+                if (meshFilters[i*n2+j] == null)
+                {   
+                    Debug.Log("NULL");
                     GameObject meshObj = new GameObject("mesh");
                     meshObj.transform.parent = transform;
 
                     meshObj.AddComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
-                    meshFilters[i*4+j] = meshObj.AddComponent<MeshFilter>();
-                    meshFilters[i*4+j].sharedMesh = new Mesh();
+                    meshFilters[i*n2+j] = meshObj.AddComponent<MeshFilter>();
+                    meshFilters[i*n2+j].sharedMesh = new Mesh();
+                    Debug.Log("Meshes "+(i*n2+j));
                     
                 }
-                tmp[i][j]=meshFilters[i*4+j];
+                tmp[i][j]=meshFilters[i*n2+j];
             }
 
-            terrainFaces[i] = new TerrainFace(shape, tmp[i], resolution, directions[i]);
+            terrainFaces[i] = new TerrainFace(shape, tmp[i], resolution, directions[i], n2, MAX_RES);
         }
     }
 
+
+    int CalculateN(){
+        float res= resolution;
+        int n =(int)Mathf.Ceil(res/(float)MAX_RES); 
+        return n;
+
+    }
     void GenerateMesh()
     {
         foreach (TerrainFace face in terrainFaces)
         {
-            face.ConstructMesh();
+            face.ConstructMesh_V2();
         }
 
         maxElevation=shape.minmax.max;
