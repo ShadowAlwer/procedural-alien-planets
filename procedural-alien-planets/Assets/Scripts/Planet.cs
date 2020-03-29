@@ -72,7 +72,6 @@ public class Planet : MonoBehaviour
                     meshObj.transform.parent = transform;
 
                     meshObj.AddComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
-                    meshObj.AddComponent<DestroyOnDisable>();
                     meshFilters[i*4+j] = meshObj.AddComponent<MeshFilter>();
                     meshFilters[i*4+j].sharedMesh = new Mesh();
                     

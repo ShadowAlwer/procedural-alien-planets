@@ -54,7 +54,7 @@ public class ShapeGenerator
         }
         //noise = Mathf.Max(0, noise - settings.noise.seaLevel);
         noise = noise * settings.noise.power;
-        v = v * (noise + 1);
+        v = v * (noise + 1f);
         minmax.Update(v.magnitude);
         return v;
     }
