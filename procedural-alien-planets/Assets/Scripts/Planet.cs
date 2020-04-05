@@ -8,6 +8,7 @@ public class Planet : MonoBehaviour
 
     public int resolution = 10;
 
+
     public ColorSettings colorSettings;
     public ShapeSettings shapeSettings;
 
@@ -27,11 +28,22 @@ public class Planet : MonoBehaviour
     void Start(){
         ColorPlanet();
     }
+
     public void Generate()
     {
+        if(shapeSettings.isProcentSeaLevel){
+            Initialize();
+            CalculateSealevel();
+            shapeSettings.isProcentSeaLevel = false;
+            GenerateMesh();
+            ColorPlanet();
+            shapeSettings.isProcentSeaLevel = true;
+        }
+        else{
         Initialize();
         GenerateMesh();
         ColorPlanet();
+        }
     }
 
     void Initialize()
@@ -47,7 +59,7 @@ public class Planet : MonoBehaviour
         if (meshFilters == null || meshFilters.Length == 0 || meshFilters.Length != n2*6)
         {
             for(int i=0; i<meshFilters.Length; i++){
-                Destroy(meshFilters[i]);
+                DestroyImmediate(meshFilters[i].gameObject);
             }
             meshFilters=null;
             meshFilters = new MeshFilter[n2*6];
@@ -97,9 +109,24 @@ public class Planet : MonoBehaviour
         {
             face.ConstructMesh_V2();
         }
-
+        float procent = (shape.pointsInSea * 100)/(resolution * resolution * 6);
+        Debug.Log("Ocean % Caverage:"+procent);
         maxElevation=shape.minmax.max;
         minElevation=shape.minmax.min;
+    }
+
+    public void CalculateSealevel(){
+        MinMax level = new MinMax();
+        foreach (TerrainFace face in terrainFaces)
+        {
+            face.CalculateSeaLevel();
+            level.Update(face.SeaMin());
+            level.Update(face.SeaMax());
+        }
+        float elevationDiff = level.max - level.min;
+        Debug.Log("Elevation diff: "+elevationDiff);
+        Debug.Log("Level min: " + level.min + "Level max: " + level.max);
+        shapeSettings.noise.seaLevel = level.min + elevationDiff* shapeSettings.procentSeaLevel;
     }
 
     public void ColorPlanet()

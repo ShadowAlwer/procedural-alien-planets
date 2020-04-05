@@ -18,9 +18,17 @@ public class ShapeGenerator
 
     public MinMax minmax;
 
+    public MinMax sealLevelMinMax;
+
+    public bool isProcentSeaLevle;
+
+    public int pointsInSea;
+
     public ShapeGenerator(ShapeSettings settings) {
         this.minmax = new MinMax();
+        this.sealLevelMinMax = new MinMax();
         this.settings = settings;
+        pointsInSea = 0;
         perlin = new PerlinNoise(settings.noise.seed,settings.noise.freq);
         worley = new WorleyNoise(settings.noise.seed, settings.noise.freq, settings.noise.jitterWorley);
         simplex = new SimplexNoise( settings.noise.seed,settings.noise.freq);
@@ -33,29 +41,33 @@ public class ShapeGenerator
 
         Vector3 v = pointOnUnitSphere;
         float freq = settings.noise.baseRoughness;
-        float amplitude = settings.noise.amplitude;
+        float amplitude = 1;
         float noise = 0;
 
         for (int i = 0; i < settings.noise.layers; i++)
         {
-            //noise += (PerlinNoise.Sample3D_OLD(v * freq + settings.noise.center, settings.noise.freq) + 1) * .6f * amplitude;
             Vector3 point=v*freq + settings.noise.center;
             noise += (noiseGen.Sample3D(point.x,point.y,point.z)+1)* .6f * amplitude;
             amplitude *= settings.noise.presistence;
             freq *= settings.noise.roughness;
         }
 
-        if(noise<settings.noise.seaLevel){
+        if(!settings.isProcentSeaLevel && noise<settings.noise.seaLevel){
             noise = settings.noise.seaLevel;
+            pointsInSea++;
             //noise = 0; //intresting results/ canions
         }
-        else{
-           
+
+        if(settings.isProcentSeaLevel){
+            sealLevelMinMax.Update(noise);
         }
+
         //noise = Mathf.Max(0, noise - settings.noise.seaLevel);
         noise = noise * settings.noise.power;
         v = v * (noise + 1f);
-        minmax.Update(v.magnitude);
+        if(!settings.isProcentSeaLevel){
+            minmax.Update(v.magnitude);
+        }
         return v;
     }
 
