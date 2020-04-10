@@ -116,7 +116,6 @@ public class TerrainFace {
        
         for(int k=0; k<n2; k++){
 
-            int triIndex = 0;
             // define boundries
             int start_x = (k%n)*maxRes-1;
             int start_y = (k/n)*maxRes-1;

@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using  static NoiseType;
 
 using ProceduralNoiseProject;
-using System;
+
 
 public class ShapeGenerator 
 {
@@ -37,17 +36,20 @@ public class ShapeGenerator
 
     public Vector3 getPointElevation(Vector3 pointOnUnitSphere)
     {
-        Noise noiseGen = getNoiseGen();
+        Noise noiseGen = getNoiseGen(settings.noise.type);
 
         Vector3 v = pointOnUnitSphere;
         float freq = settings.noise.baseRoughness;
         float amplitude = 1;
         float noise = 0;
 
-        for (int i = 0; i < settings.noise.layers; i++)
+        for (int i = 0; i < settings.noise.layers.Length; i++)
         {
+            noiseGen = getNoiseGen(settings.noise.layers[i].type);
             Vector3 point=v*freq + settings.noise.center;
-            noise += (noiseGen.Sample3D(point.x,point.y,point.z)+1)* .6f * amplitude;
+
+            noise+=calculateLayerValue(noiseGen, settings.noise.layers[i], point, amplitude);
+
             amplitude *= settings.noise.presistence;
             freq *= settings.noise.roughness;
         }
@@ -71,9 +73,34 @@ public class ShapeGenerator
         return v;
     }
 
-    private Noise getNoiseGen()
+    private float calculateLayerValue(Noise noiseGen, Layer layer, Vector3 point, float amplitude){
+            
+            float value = noiseGen.Sample3D(point.x,point.y,point.z);
+
+            if(layer.sign == LayerSign.ADD){
+                value = (value+1)* amplitude; 
+            }
+
+            if(layer.sign == LayerSign.SUBTRACT){
+                value = -(value+1)* amplitude; 
+            }
+            if(layer.sign == LayerSign.NEGATIVE){
+                
+                value = Mathf.Pow(value,4);   
+                value = (value+1)*  amplitude; 
+            }
+             if(layer.sign == LayerSign.SUB_NEG){
+                
+                value = Mathf.Pow(value,4);   
+                value = (1-(value+1))* amplitude; 
+            }
+
+            return value;
+    }
+
+    private Noise getNoiseGen(NoiseType type)
     {
-        switch(settings.noise.type){
+        switch(type){
             case NoiseType.PERLIN:
                 return perlin;
             case NoiseType.WORLEY:

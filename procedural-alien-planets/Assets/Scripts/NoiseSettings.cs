@@ -15,7 +15,8 @@ public class NoiseSettings
 
     public float presistence = 0.5f;
 
-    public int layers = 1;
+    public Layer[] layers;
+
     public Vector3 center=Vector3.zero;
 
     [Range(0, 10)]
@@ -28,4 +29,5 @@ public class NoiseSettings
     public float jitterWorley=1;
 
     public NoiseType type = NoiseType.PERLIN;
+
 }

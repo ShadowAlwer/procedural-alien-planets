@@ -59,7 +59,8 @@ public class Planet : MonoBehaviour
         if (meshFilters == null || meshFilters.Length == 0 || meshFilters.Length != n2*6)
         {
             for(int i=0; i<meshFilters.Length; i++){
-                DestroyImmediate(meshFilters[i].gameObject);
+                if(meshFilters[i])
+                    DestroyImmediate(meshFilters[i].gameObject);
             }
             meshFilters=null;
             meshFilters = new MeshFilter[n2*6];
