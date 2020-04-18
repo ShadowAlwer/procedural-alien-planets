@@ -23,6 +23,7 @@ public class Planet : MonoBehaviour
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
+    //Max res for a part of TerrainFace
     const int MAX_RES= 250;
     
     void Start(){
@@ -111,9 +112,13 @@ public class Planet : MonoBehaviour
             face.ConstructMesh_V2();
         }
         float procent = (shape.pointsInSea * 100)/(resolution * resolution * 6);
+        shapeSettings.seaCoverage = procent;
         Debug.Log("Ocean % Caverage:"+procent);
         maxElevation=shape.minmax.max;
         minElevation=shape.minmax.min;
+
+        SaveDataToCSV();
+
     }
 
     public void CalculateSealevel(){
@@ -124,10 +129,13 @@ public class Planet : MonoBehaviour
             level.Update(face.SeaMin());
             level.Update(face.SeaMax());
         }
+
+        float maxHeight = level.max;
+        shapeSettings.maxHeight = maxHeight;
+        Debug.Log("Max height: "+ maxHeight);
+        
         float elevationDiff = level.max - level.min;
-        Debug.Log("Elevation diff: "+elevationDiff);
-        Debug.Log("Level min: " + level.min + "Level max: " + level.max);
-        shapeSettings.noise.seaLevel = level.min + elevationDiff* shapeSettings.procentSeaLevel;
+        shapeSettings.noise.seaLevel = level.min + elevationDiff * shapeSettings.procentSeaLevel;
     }
 
     public void ColorPlanet()
@@ -139,6 +147,12 @@ public class Planet : MonoBehaviour
 
         color.SetElevation(new MinMax(minElevation,maxElevation));
         color.SetColors();
+    }
+
+
+    void SaveDataToCSV(){
+      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution);
+      collector.ToCSV();
     }
 
 }
