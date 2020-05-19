@@ -8,7 +8,7 @@ public class Planet : MonoBehaviour
 
     public int resolution = 10;
 
-
+    public string csvName = "planet.csv";
     public ColorSettings colorSettings;
     public ShapeSettings shapeSettings;
 
@@ -23,6 +23,12 @@ public class Planet : MonoBehaviour
     MeshFilter[] meshFilters;
     TerrainFace[] terrainFaces;
 
+    public SimulationData simData;
+
+    float seaCalculationTime;
+
+    float meshGenerationTime;
+
     //Max res for a part of TerrainFace
     const int MAX_RES= 250;
     
@@ -32,19 +38,35 @@ public class Planet : MonoBehaviour
 
     public void Generate()
     {
-        if(shapeSettings.isProcentSeaLevel){
+
+        int startRes = this.resolution;
+        float startLevel = this.shapeSettings.procentSeaLevel;
+
+        for(int i=0; i<simData.simulatonRuns; i++){
+
+            seaCalculationTime = -1;
+            meshGenerationTime = -1;
+
+            if(shapeSettings.isProcentSeaLevel){
+                Initialize();
+                CalculateSealevel();
+                shapeSettings.isProcentSeaLevel = false;
+                GenerateMesh();
+                ColorPlanet();
+                shapeSettings.isProcentSeaLevel = true;
+            }
+            else{
             Initialize();
-            CalculateSealevel();
-            shapeSettings.isProcentSeaLevel = false;
             GenerateMesh();
             ColorPlanet();
-            shapeSettings.isProcentSeaLevel = true;
+            }
+            this.resolution += simData.simulationDelta;
+            this.shapeSettings.procentSeaLevel += simData.seaLevelDelta;
+            Debug.Log("Sim Run #"+(i+1));
         }
-        else{
-        Initialize();
-        GenerateMesh();
-        ColorPlanet();
-        }
+
+        this.resolution = startRes;
+        this.shapeSettings.procentSeaLevel = startLevel;
     }
 
     void Initialize()
@@ -52,7 +74,6 @@ public class Planet : MonoBehaviour
 
         int n = CalculateN();
         int n2=n*n;
-        Debug.Log("n "+ n+ ", n2 "+n2);
         shape = new ShapeGenerator(shapeSettings);
         color = new ColorGenerator(colorSettings);
         
@@ -81,15 +102,12 @@ public class Planet : MonoBehaviour
             for(int j=0; j<n2; j++){
                 if (meshFilters[i*n2+j] == null)
                 {   
-                    Debug.Log("NULL");
                     GameObject meshObj = new GameObject("mesh");
                     meshObj.transform.parent = transform;
 
                     meshObj.AddComponent<MeshRenderer>().sharedMaterial = colorSettings.planetMaterial;
                     meshFilters[i*n2+j] = meshObj.AddComponent<MeshFilter>();
-                    meshFilters[i*n2+j].sharedMesh = new Mesh();
-                    Debug.Log("Meshes "+(i*n2+j));
-                    
+                    meshFilters[i*n2+j].sharedMesh = new Mesh();                   
                 }
                 tmp[i][j]=meshFilters[i*n2+j];
             }
@@ -107,21 +125,27 @@ public class Planet : MonoBehaviour
     }
     void GenerateMesh()
     {
+        float startTime = Time.realtimeSinceStartup;
+        
         foreach (TerrainFace face in terrainFaces)
         {
             face.ConstructMesh_V2();
         }
         float procent = (shape.pointsInSea * 100)/(resolution * resolution * 6);
         shapeSettings.seaCoverage = procent;
-        Debug.Log("Ocean % Caverage:"+procent);
         maxElevation=shape.minmax.max;
         minElevation=shape.minmax.min;
+
+        this.meshGenerationTime = Time.realtimeSinceStartup - startTime;
 
         SaveDataToCSV();
 
     }
 
     public void CalculateSealevel(){
+
+        float startTime = Time.realtimeSinceStartup;
+
         MinMax level = new MinMax();
         foreach (TerrainFace face in terrainFaces)
         {
@@ -132,10 +156,11 @@ public class Planet : MonoBehaviour
 
         float maxHeight = level.max;
         shapeSettings.maxHeight = maxHeight;
-        Debug.Log("Max height: "+ maxHeight);
         
         float elevationDiff = level.max - level.min;
         shapeSettings.noise.seaLevel = level.min + elevationDiff * shapeSettings.procentSeaLevel;
+
+        this.seaCalculationTime = Time.realtimeSinceStartup - startTime;
     }
 
     public void ColorPlanet()
@@ -151,7 +176,7 @@ public class Planet : MonoBehaviour
 
 
     void SaveDataToCSV(){
-      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution);
+      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution, seaCalculationTime, meshGenerationTime, csvName);
       collector.ToCSV();
     }
 

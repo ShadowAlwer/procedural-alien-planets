@@ -6,7 +6,10 @@ public class PlanetRotationController : MonoBehaviour
 {
 
     public float rotationSpeed=2;
+    public float orbitSpeed = 0.1f;
     // Start is called before the first frame update
+    public bool orbit = true;
+    public Transform point;
     void Start()
     {
        
@@ -15,7 +18,9 @@ public class PlanetRotationController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //this.transform.RotateAround(transform.position, Vector3.up, rotationSpeed);
-        this.transform.Rotate(Vector3.up * rotationSpeed* Time.deltaTime);
+        if(orbit){
+            this.transform.RotateAround(point.position, Vector3.up, orbitSpeed);
+        }
+        this.transform.Rotate(Vector3.up * rotationSpeed* Time.deltaTime, Space.Self);
     }
 }

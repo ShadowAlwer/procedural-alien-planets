@@ -13,16 +13,39 @@ MonoBehaviour:
   m_Name: shape1
   m_EditorClassIdentifier: 
   noise:
-    power: 0.41
-    amplitude: 1
-    roughness: 1.58
-    baseRoughness: 0.95
-    presistence: 0.65
-    layers: 15
+    power: 0.09
+    roughness: 1.51
+    baseRoughness: 0.3
+    presistence: 0.6
+    layers:
+    - type: 1
+      sign: 0
+    - type: 2
+      sign: 1
+    - type: 1
+      sign: 3
+    - type: 2
+      sign: 0
+    - type: 2
+      sign: 0
+    - type: 1
+      sign: 0
+    - type: 1
+      sign: 0
+    - type: 2
+      sign: 0
+    - type: 2
+      sign: 0
+    - type: 1
+      sign: 0
     center: {x: 46.56, y: 51.4, z: 27.92}
-    seaLevel: 2.22
-    freq: 0.89
+    seaLevel: 0.9138306
+    freq: 0.02
     seed: 120
     jitterWorley: 1
     type: 2
-  planetRadius: 10
+  planetRadius: 200
+  isProcentSeaLevel: 1
+  procentSeaLevel: 0.34
+  maxHeight: 2.1941009
+  seaCoverage: 32
