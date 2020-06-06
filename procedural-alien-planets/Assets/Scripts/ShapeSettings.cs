@@ -20,6 +20,7 @@ public class ShapeSettings : ScriptableObject
     [HideInInspector]
     public float seaCoverage;
 
+    public float realSeaLevel = 0;
 
     ShapeSettings(NoiseSettings noiseSettings) {
         noise = noiseSettings;

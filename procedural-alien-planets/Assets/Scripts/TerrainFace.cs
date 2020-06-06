@@ -6,7 +6,7 @@ using UnityEngine;
 public class TerrainFace {
 
     ShapeGenerator shape;
-    Mesh[] meshes;
+    public Mesh[] meshes;
     int resolution;
     Vector3 localUp;
     Vector3 axisA;
@@ -35,6 +35,7 @@ public class TerrainFace {
 
     public void ConstructMesh_V2()
     {
+        shape.settings.realSeaLevel = 0;
           Vector3[][] vertices= new Vector3[n2][];
           int[][] triangles= new int[n2][];
 
@@ -108,7 +109,6 @@ public class TerrainFace {
     public void CalculateSeaLevel(){
 
         shape.isProcentSeaLevle = false;
-        
           Vector3[][] vertices= new Vector3[n2][];
           int[][] triangles= new int[n2][];
 

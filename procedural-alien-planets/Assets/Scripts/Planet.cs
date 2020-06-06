@@ -138,8 +138,14 @@ public class Planet : MonoBehaviour
 
         this.meshGenerationTime = Time.realtimeSinceStartup - startTime;
 
-        SaveDataToCSV();
+        TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
+        int i=0;
+        foreach(TerrainFace face in terrainFaces){
+            counter.countTerrain(face, i);
+            i++;
+        }
 
+        SaveDataToCSV();
     }
 
     public void CalculateSealevel(){

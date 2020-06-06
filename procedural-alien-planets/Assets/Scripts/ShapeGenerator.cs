@@ -58,6 +58,11 @@ public class ShapeGenerator
             noise = settings.noise.seaLevel;
             pointsInSea++;
             //noise = 0; //intresting results/ canions
+
+            //realSeaLevel
+            if(settings.realSeaLevel == 0){
+                settings.realSeaLevel = (v * ((noise * settings.noise.power) + 1f)).magnitude;
+            }
         }
 
         if(settings.isProcentSeaLevel){
