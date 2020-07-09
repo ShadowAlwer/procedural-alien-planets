@@ -14,21 +14,24 @@ public class PlanetDataCollector {
 
         public float meshCalculationTime;
 
+        public float averageLandMasses;
+
         static string CSV_LOCATION = "C:\\Users\\Alex\\Desktop\\Badania\\";
 
         string csvName;
 
         static string[] HEADERS = {"Radius", "Resolution", "MaxHight", "SeaCoverage", "% Sea Level", 
                                     "SeaLevel", "Layers", "Frequency", "Base Roughness",   
-                                    "Roughness", "Presistence", "Mesh Calc Time","Sea Calc Time"};
+                                    "Roughness", "Presistence", "Mesh Calc Time","Sea Calc Time", "Average Land Masses"};
 
 
     public PlanetDataCollector(ShapeSettings _shapeSettings, float _resolution, float _seaCalculationTime, 
-                                float _meshCalculationTime, string _csvName){
+                                float _meshCalculationTime, float _averageLandMasses, string _csvName){
             shapeSettings= _shapeSettings;
             resolution= _resolution;
             seaCalculationTime = _seaCalculationTime;
             meshCalculationTime = _meshCalculationTime;
+            averageLandMasses = _averageLandMasses;
             csvName = _csvName;
 
     }
@@ -52,7 +55,8 @@ public class PlanetDataCollector {
         csv.Append(shapeSettings.noise.roughness+",");
         csv.Append(shapeSettings.noise.presistence+",");
         csv.Append(meshCalculationTime+",");
-        csv.Append(seaCalculationTime);
+        csv.Append(seaCalculationTime+",");
+        csv.Append(averageLandMasses);
    
         csv.Append("\n");
         File.AppendAllText(CSV_LOCATION+csvName, csv.ToString());

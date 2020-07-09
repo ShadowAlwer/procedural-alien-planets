@@ -139,9 +139,9 @@ public class TerrainCounter
          for(int i = 0; i < terrainPoints.Length; i++){
             for(int j = 0; j < terrainPoints.Length; j++){
                 if(terrainPoints[i][j].kind == -1){
-                    csv.Append("___");
+                    csv.Append("__");
                 }else {
-                    csv.Append(terrainPoints[i][j].kind.ToString("D3"));
+                    csv.Append(terrainPoints[i][j].kind.ToString("D2"));
                 }
             }
             csv.Append("\n");

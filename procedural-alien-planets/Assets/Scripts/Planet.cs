@@ -29,6 +29,8 @@ public class Planet : MonoBehaviour
 
     float meshGenerationTime;
 
+    float averageLandMasses;
+
     //Max res for a part of TerrainFace
     const int MAX_RES= 250;
     
@@ -60,7 +62,8 @@ public class Planet : MonoBehaviour
             GenerateMesh();
             ColorPlanet();
             }
-            this.resolution += simData.simulationDelta;
+            simData.PrepareSimulation(this);
+            this.resolution += simData.resolutionDelta;
             this.shapeSettings.procentSeaLevel += simData.seaLevelDelta;
             Debug.Log("Sim Run #"+(i+1));
         }
@@ -140,11 +143,12 @@ public class Planet : MonoBehaviour
 
         TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
         int i=0;
+        float sum = 0;
         foreach(TerrainFace face in terrainFaces){
-            counter.countTerrain(face, i);
+            sum += counter.countTerrain(face, i);
             i++;
         }
-
+        this.averageLandMasses = sum/(i + 1);
         SaveDataToCSV();
     }
 
@@ -182,7 +186,7 @@ public class Planet : MonoBehaviour
 
 
     void SaveDataToCSV(){
-      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution, seaCalculationTime, meshGenerationTime, csvName);
+      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution, seaCalculationTime, meshGenerationTime, averageLandMasses, csvName);
       collector.ToCSV();
     }
 

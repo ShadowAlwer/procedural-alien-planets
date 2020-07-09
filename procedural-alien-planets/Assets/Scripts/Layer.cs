@@ -6,4 +6,9 @@ public class Layer {
 
     public LayerSign sign;  
 
+    public Layer(NoiseType _type, LayerSign _sign){
+         type=_type;
+         sign=_sign;
+    }
+
 }
