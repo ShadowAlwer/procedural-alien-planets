@@ -19,8 +19,14 @@ public class ShapeSettings : ScriptableObject
 
     [HideInInspector]
     public float seaCoverage;
-
+    [HideInInspector]
     public float realSeaLevel = 0;
+
+    [HideInInspector]
+    public float procentHeight = 0;
+
+    [HideInInspector]
+    public float averageLandMasses = 0;
 
     ShapeSettings(NoiseSettings noiseSettings) {
         noise = noiseSettings;

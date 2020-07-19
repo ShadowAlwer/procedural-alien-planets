@@ -23,7 +23,7 @@ public class TerrainCounter
 
     int counter = 0;
 
-    bool debug = true;
+    public bool debug = false;
 
     static string FILE_LOCATION = "C:\\Users\\Alex\\Desktop\\Badania\\";
 
@@ -33,12 +33,13 @@ public class TerrainCounter
         new  Vector2Int(0, -1),  /*current position ***/ new  Vector2Int(0, 1),
         new  Vector2Int(1, -1),  new  Vector2Int(1, 0),  new  Vector2Int(1, 1)
     };
-    public TerrainCounter(Transform center, float seaLevel, int resolution, int sufix = 0){
+    public TerrainCounter(Transform center, float seaLevel, int resolution, int sufix = 0, bool _debug = false){
         planetCenter = center;
         planetSeaLevel = seaLevel;
         planetResolution = resolution;
         listToCheck = new List<TerrainPoint>();
         fileSufix = sufix;
+        debug = _debug;
     }
     public int countTerrain(TerrainFace face, int suffix = 0){
 

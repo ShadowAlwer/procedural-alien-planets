@@ -28,6 +28,4 @@ public class NoiseSettings
 
     public float jitterWorley=1;
 
-    public NoiseType type = NoiseType.PERLIN;
-
 }

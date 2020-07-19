@@ -14,9 +14,9 @@ public class Planet : MonoBehaviour
 
     public ShapeGenerator shape;
     public ColorGenerator color;
-
+    [HideInInspector]
     public float maxElevation;
-
+    [HideInInspector]
     public float minElevation;
 
     [SerializeField, HideInInspector]
@@ -140,16 +140,19 @@ public class Planet : MonoBehaviour
         minElevation=shape.minmax.min;
 
         this.meshGenerationTime = Time.realtimeSinceStartup - startTime;
-
-        TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
-        int i=0;
-        float sum = 0;
-        foreach(TerrainFace face in terrainFaces){
-            sum += counter.countTerrain(face, i);
-            i++;
+        
+        if (simData.saveCSV) {
+            TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
+            int i=0;
+            float sum = 0;
+            foreach(TerrainFace face in terrainFaces){
+                sum += counter.countTerrain(face, i);
+                i++;
+            }
+            this.shapeSettings.procentHeight = (this.maxElevation - this.minElevation)/this.minElevation;
+            this.shapeSettings.averageLandMasses = sum/(i + 1);
+            SaveDataToCSV();
         }
-        this.averageLandMasses = sum/(i + 1);
-        SaveDataToCSV();
     }
 
     public void CalculateSealevel(){
@@ -186,7 +189,7 @@ public class Planet : MonoBehaviour
 
 
     void SaveDataToCSV(){
-      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution, seaCalculationTime, meshGenerationTime, averageLandMasses, csvName);
+      PlanetDataCollector collector = new PlanetDataCollector(shapeSettings, resolution, seaCalculationTime, meshGenerationTime, csvName);
       collector.ToCSV();
     }
 

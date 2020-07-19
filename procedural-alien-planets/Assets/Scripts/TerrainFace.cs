@@ -161,22 +161,6 @@ public class TerrainFace {
     }
 
 
-    private Vector2 getMeshSpace(int k){
-        switch(k){
-            case 0: 
-                return new Vector2Int(0,0);
-            case 1: 
-                return new Vector2Int(resolution/2,0);
-            case 2: 
-                return new Vector2Int(0,resolution/2);
-            case 3: 
-                return new Vector2Int(resolution/2,resolution/2);
-            default: 
-                return new Vector2Int(0,0);
-                
-        }
-    }
-
     public float SeaMin(){
         return shape.sealLevelMinMax.min;
     }

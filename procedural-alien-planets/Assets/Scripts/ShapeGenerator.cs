@@ -36,7 +36,7 @@ public class ShapeGenerator
 
     public Vector3 getPointElevation(Vector3 pointOnUnitSphere)
     {
-        Noise noiseGen = getNoiseGen(settings.noise.type);
+        Noise noiseGen;
 
         Vector3 v = pointOnUnitSphere;
         float freq = settings.noise.baseRoughness;
@@ -57,8 +57,6 @@ public class ShapeGenerator
         if(!settings.isProcentSeaLevel && noise<settings.noise.seaLevel){
             noise = settings.noise.seaLevel;
             pointsInSea++;
-            //noise = 0; //intresting results/ canions
-
             //realSeaLevel
             if(settings.realSeaLevel == 0){
                 settings.realSeaLevel = (v * ((noise * settings.noise.power) + 1f)).magnitude;
@@ -93,11 +91,6 @@ public class ShapeGenerator
                 
                 value = Mathf.Pow(value,4);   
                 value = (value+1)*  amplitude; 
-            }
-             if(layer.sign == LayerSign.SUB_NEG){
-                
-                value = Mathf.Pow(value,4);   
-                value = (1-(value+1))* amplitude; 
             }
 
             return value;

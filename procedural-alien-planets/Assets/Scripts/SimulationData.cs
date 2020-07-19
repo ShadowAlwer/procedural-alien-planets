@@ -3,6 +3,8 @@ using UnityEngine;
 [System.Serializable]
 public class SimulationData {
 
+    public bool saveCSV = false;
+
     public int simulatonRuns = 1;
 
     public int resolutionDelta = 0;
@@ -21,8 +23,6 @@ public class SimulationData {
 
     [Range(0, 1)]
     public  float seaLevelDelta = 0.05f;
-
-
 
     public void PrepareSimulation(Planet planet) {
         int lenght = planet.shapeSettings.noise.layers.Length+1;
