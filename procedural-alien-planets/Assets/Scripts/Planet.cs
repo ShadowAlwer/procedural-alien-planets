@@ -63,11 +63,9 @@ public class Planet : MonoBehaviour
             ColorPlanet();
             }
             simData.PrepareSimulation(this);
-            this.resolution += simData.resolutionDelta;
-            this.shapeSettings.procentSeaLevel += simData.seaLevelDelta;
             Debug.Log("Sim Run #"+(i+1));
         }
-
+        simData.RestoreSim(this);
         this.resolution = startRes;
         this.shapeSettings.procentSeaLevel = startLevel;
     }
@@ -140,17 +138,19 @@ public class Planet : MonoBehaviour
         minElevation=shape.minmax.min;
 
         this.meshGenerationTime = Time.realtimeSinceStartup - startTime;
-        
+        this.shapeSettings.averageLandMasses = -1f;
         if (simData.saveCSV) {
-            TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
-            int i=0;
-            float sum = 0;
-            foreach(TerrainFace face in terrainFaces){
-                sum += counter.countTerrain(face, i);
-                i++;
+            if(simData.calculateLandMasses) {
+                TerrainCounter counter = new TerrainCounter(transform, shapeSettings.realSeaLevel, resolution);
+                int i=0;
+                float sum = 0;
+                foreach(TerrainFace face in terrainFaces){
+                    sum += counter.countTerrain(face, i);
+                    i++;
+                }
+                this.shapeSettings.averageLandMasses = sum/(i + 1);
             }
-            this.shapeSettings.procentHeight = (this.maxElevation - this.minElevation)/this.minElevation;
-            this.shapeSettings.averageLandMasses = sum/(i + 1);
+            this.shapeSettings.procentHeight = (this.maxElevation - this.minElevation)/this.minElevation; 
             SaveDataToCSV();
         }
     }
